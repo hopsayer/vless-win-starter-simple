@@ -35,7 +35,7 @@ if not exist "sing-box.exe" (
 rem Check if config.json exists
 if not exist "config.json" (
     echo ERROR: config.json not found! Please create config file.
-    echo You can use config.json.example as template.
+    echo You can use config-filled-fake.json as template.
     pause
     exit /b 1
 )
