@@ -47,14 +47,14 @@ start "" /b sing-box.exe run -c client.json
 rem Small delay to let sing-box start
 timeout /t 2 /nobreak >nul
 
-rem Enable system proxy 127.0.0.1:1080
+rem Enable system proxy 127.0.0.1:1084
 echo Enabling system proxy...
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyEnable /t REG_DWORD /d 1 /f >nul
-reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyServer /t REG_SZ /d "127.0.0.1:1080" /f >nul
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyServer /t REG_SZ /d "127.0.0.1:1084" /f >nul
 
 echo.
 echo ========================================
-echo  Proxy enabled on 127.0.0.1:1080
+echo  Proxy enabled on 127.0.0.1:1084
 echo  Press any key to stop and disable
 echo ========================================
 echo.
