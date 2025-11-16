@@ -87,6 +87,11 @@ If you have already lost Internet connection:
 A-way. Run the .bat again. Press any key. Close the window. 
 B-way. Go to system settings, find `proxy` (system proxy), disable it. 
 
+## How to check if proxy works
+
+1. Open https://whoer.net in browser
+2. Check if your IP/country location changed
+
 ---
 
 Page Views:
