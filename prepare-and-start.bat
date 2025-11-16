@@ -2,24 +2,21 @@
 setlocal
 
 set SINGBOX_VERSION=1.9.7
-set SINGBOX_ZIP=sing-box-%SINGBOX_VERSION%-windows-amd64.zip
+set SINGBOX_ZIP=sing-box-%SINGBOX_VERSION%-windows-amd64-legacy.zip
 set SINGBOX_URL=https://github.com/SagerNet/sing-box/releases/download/v%SINGBOX_VERSION%/%SINGBOX_ZIP%
 
 rem Check if sing-box.exe exists
 if not exist "sing-box.exe" (
     echo sing-box.exe not found
     
-    rem Check if zip exists
-    if not exist "%SINGBOX_ZIP%" (
-        echo Downloading sing-box %SINGBOX_VERSION%...
-        curl -L -o "%SINGBOX_ZIP%" "%SINGBOX_URL%"
-        if errorlevel 1 (
-            echo ERROR: Failed to download sing-box!
-            pause
-            exit /b 1
-        )
-        echo Download complete
+    echo Downloading sing-box %SINGBOX_VERSION%...
+    curl -L -o "%SINGBOX_ZIP%" "%SINGBOX_URL%"
+    if errorlevel 1 (
+        echo ERROR: Failed to download sing-box!
+        pause
+        exit /b 1
     )
+    echo Download complete
     
     rem Extract zip
     echo Extracting sing-box...
@@ -29,6 +26,14 @@ if not exist "sing-box.exe" (
         pause
         exit /b 1
     )
+    
+    rem Move sing-box.exe from subfolder to current directory
+    move "sing-box-%SINGBOX_VERSION%-windows-amd64-legacy\sing-box.exe" "sing-box.exe" >nul
+    
+    rem Clean up
+    rmdir /s /q "sing-box-%SINGBOX_VERSION%-windows-amd64-legacy"
+    del "%SINGBOX_ZIP%"
+    
     echo Extraction complete
 )
 
@@ -44,13 +49,20 @@ rem Start sing-box VLESS client
 echo Starting sing-box...
 start "" /b sing-box.exe run -c config.json
 
-rem Small delay to let sing-box start
-timeout /t 2 /nobreak >nul
+rem Check if sing-box started successfully
+timeout /t 1 /nobreak >nul
+tasklist /FI "IMAGENAME eq sing-box.exe" 2>NUL | find /I /N "sing-box.exe">NUL
+if "%ERRORLEVEL%"=="0" (
+    echo [OK] sing-box is running
+) else (
+    echo [ERROR] sing-box failed to start! Check config.json
+    pause
+    exit /b 1
+)
 
-rem Enable system proxy 127.0.0.1:1084
+rem Enable system proxy using PowerShell for proper refresh
 echo Enabling system proxy...
-reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyEnable /t REG_DWORD /d 1 /f >nul
-reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyServer /t REG_SZ /d "127.0.0.1:1084" /f >nul
+powershell -ExecutionPolicy Bypass -Command "$regPath='HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings'; Set-ItemProperty -Path $regPath -Name ProxyEnable -Value 1; Set-ItemProperty -Path $regPath -Name ProxyServer -Value '127.0.0.1:1084'; Add-Type -TypeDefinition 'using System;using System.Runtime.InteropServices;public class W{[DllImport(\"wininet.dll\")]public static extern bool InternetSetOption(IntPtr h,int o,IntPtr b,int l);public static void R(){InternetSetOption(IntPtr.Zero,39,IntPtr.Zero,0);InternetSetOption(IntPtr.Zero,37,IntPtr.Zero,0);}}'; [W]::R()"
 
 echo.
 echo ========================================
@@ -61,13 +73,9 @@ echo.
 
 pause >nul
 
-rem Disable system proxy
+rem Disable system proxy using PowerShell
 echo Disabling system proxy...
-reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyEnable /t REG_DWORD /d 0 /f >nul
-reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyServer /f >nul 2>&1
-
-rem Small delay to let system proxy get disabled
-timeout /t 2 /nobreak >nul
+powershell -ExecutionPolicy Bypass -Command "$regPath='HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings'; Set-ItemProperty -Path $regPath -Name ProxyEnable -Value 0; Remove-ItemProperty -Path $regPath -Name ProxyServer -ErrorAction SilentlyContinue; Add-Type -TypeDefinition 'using System;using System.Runtime.InteropServices;public class W{[DllImport(\"wininet.dll\")]public static extern bool InternetSetOption(IntPtr h,int o,IntPtr b,int l);public static void R(){InternetSetOption(IntPtr.Zero,39,IntPtr.Zero,0);InternetSetOption(IntPtr.Zero,37,IntPtr.Zero,0);}}'; [W]::R()"
 
 rem Kill sing-box
 echo Stopping sing-box...
