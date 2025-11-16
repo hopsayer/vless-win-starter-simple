@@ -23,7 +23,7 @@ Simple one-click VLESS proxy starter for Windows using sing-box.
 - Windows 10 or newer
 - Internet connection
 
-## Needed folder structure
+## Required folder structure
 
 ```
 internet-enabler/
