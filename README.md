@@ -31,7 +31,7 @@ internet-enabler/
 └── config.json (your version based on config-filled-fake.json)
 ```
 
-## What to do
+## How to use
 
 I. Download this repository or just files separately: `config-filled-fake.json` and `prepare-and-start.bat`
 
