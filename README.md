@@ -28,7 +28,8 @@ Simple one-click VLESS proxy starter for Windows using sing-box.
 ```
 internet-enabler/
 ├── prepare-and-start.bat
-└── config.json (your version based on config-filled-fake.json)
+├── config.json (your version based on config-filled-fake.json)
+└── sing-box.exe
 ```
 
 ## How to use
