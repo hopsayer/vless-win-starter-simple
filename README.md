@@ -65,6 +65,12 @@ Or using Nekoray:
 
 IV. When config.json is in place and filled, run `prepare-and-start.bat`, preferably as Admin
 
+You must see non-red lines of log:
+```
+INFO[0000] inbound/mixed[mixed-in]: tcp server started at 127.0.0.1:2080
+INFO[0000] sing-box started (0.11s)
+```
+
 ---
 
 Page Views:
