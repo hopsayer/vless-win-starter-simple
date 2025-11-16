@@ -64,4 +64,4 @@ The other way is to use Nekoray:
 
 IV. When config.json is in place and filled, run `prepare-and-start.bat`, preferably as Admin
 
-![GitHub views](https://komarev.com/ghpvc/?username=hopsayer&repo=vless-win-starter-simple&color=green&style=flat-square)
+![Views](https://komarev.com/ghpvc/?username=hopsayer&repo=vless-win-starter-simple&color=green&style=flat-square)
